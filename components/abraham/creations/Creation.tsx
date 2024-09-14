@@ -5,7 +5,7 @@ import { FlameIcon, MessageSquare } from "lucide-react";
 
 export default function Creation({ creation }: { creation: CreationItem }) {
   return (
-    <div className="grid grid-cols-12 border-b p-4 w-[43vw]">
+    <div className="grid grid-cols-12 border-b p-4 lg:w-[43vw]">
       <div className="col-span-1 flex flex-col mr-3">
         <Image
           src={"/abrahamlogo.png"}
