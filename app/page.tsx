@@ -1,10 +1,20 @@
-import Image from "next/image";
+"use client";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import CreationList from "@/components/abraham/creations/CreationList";
 
 export default function Home() {
+  const [creations, setCreations] = useState([]);
+  useEffect(() => {
+    axios.get("/api/artlabproxy/stories").then((res) => {
+      setCreations(res.data);
+    });
+  }, []);
+
   return (
     <>
       <div className="container">
-        <h1>Next.js + Tailwind CSS</h1>
+        <CreationList creations={creations || []} />
       </div>
     </>
   );
