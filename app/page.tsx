@@ -13,8 +13,10 @@ export default function Home() {
 
   return (
     <>
-      <div className="container">
-        <CreationList creations={creations || []} />
+      <div>
+        <div className=" flex flex-col items-center justify-center w-full mt-20">
+          <CreationList creations={creations || []} />
+        </div>
       </div>
     </>
   );
