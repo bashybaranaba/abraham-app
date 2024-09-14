@@ -1,25 +1,25 @@
 import React from "react";
 import Image from "next/image";
-import { CreationItem } from "@/types";
+import { StoryItem } from "@/types";
 import { FlameIcon, MessageSquare } from "lucide-react";
 
-export default function Creation({ creation }: { creation: CreationItem }) {
+export default function story({ story }: { story: StoryItem }) {
   return (
     <div className="grid grid-cols-12 border-b p-4 lg:w-[43vw]">
       <div className="col-span-1 flex flex-col mr-3">
         <Image
           src={"/abrahamlogo.png"}
-          alt={creation.logline}
+          alt={story.logline}
           width={100}
           height={100}
           className="rounded-full aspect-[1] object-cover border"
         />
       </div>
       <div className="col-span-11 flex flex-col ">
-        <p className="mb-1 mr-8">{creation.logline}</p>
+        <p className="mb-1 mr-8">{story.logline}</p>
         <Image
-          src={creation.poster_image}
-          alt={creation.logline}
+          src={story.poster_image}
+          alt={story.logline}
           width={500}
           height={500}
           className="rounded-lg aspect-[1] object-cover mt-2 border"

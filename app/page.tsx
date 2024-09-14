@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import CreationList from "@/components/abraham/creations/CreationList";
+import StoryList from "@/components/abraham/stories/StoryList";
 
 export default function Home() {
-  const [creations, setCreations] = useState([]);
+  const [stories, setStories] = useState([]);
   useEffect(() => {
     axios.get("/api/artlabproxy/stories").then((res) => {
-      setCreations(res.data);
+      setStories(res.data);
     });
   }, []);
 
@@ -15,7 +15,7 @@ export default function Home() {
     <>
       <div>
         <div className=" flex flex-col items-center justify-center w-full">
-          <CreationList creations={creations || []} />
+          <StoryList stories={stories || []} />
         </div>
       </div>
     </>
