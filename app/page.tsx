@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <div className=" flex flex-col items-center justify-center w-full mt-20">
+        <div className=" flex flex-col items-center justify-center w-full">
           <CreationList creations={creations || []} />
         </div>
       </div>
