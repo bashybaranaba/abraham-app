@@ -12,6 +12,8 @@ yarn install
 pnpm install
 ```
 
+Ensure you have all the required environment variables as specified in the **.env.example** file in your **.env.local**
+
 Then run the development server:
 
 ```bash
