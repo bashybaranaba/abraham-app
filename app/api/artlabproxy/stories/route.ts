@@ -1,9 +1,6 @@
-// app/api/stories/route.ts
 import { NextResponse } from "next/server";
 
-/**
- * GET /api/stories - Get all stories from external API
- */
+export const revalidate = 0;
 
 export async function GET(request: Request) {
   const apiUrl =
