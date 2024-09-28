@@ -51,6 +51,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (web3auth.connected && idToken) {
           setLoggedIn(true);
+          const userData = await web3auth.getUserInfo();
+          setUserInfo(userData);
         }
       } catch (error) {
         console.error("Error initializing Web3Auth:", error);

@@ -18,7 +18,7 @@ function AccountMenu() {
 
   return (
     <div className="m-3">
-      {loggedIn && (
+      {loggedIn && userInfo && (
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
