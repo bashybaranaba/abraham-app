@@ -10,6 +10,7 @@ interface AuthContextType {
   login: () => Promise<void>;
   logout: () => Promise<void>;
   loggedIn: boolean;
+  userInfo: any | null;
   provider: IProvider | null;
 }
 
@@ -32,6 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
   const [loggedIn, setLoggedIn] = useState(!!idToken);
   const [provider, setProvider] = useState<IProvider | null>(null);
+  const [userInfo, setUserInfo] = useState<any | null>(null);
 
   useEffect(() => {
     // Initialize Web3Auth and check login status
@@ -65,6 +67,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (web3auth.connected) {
         setLoggedIn(true);
+        const userData = await web3auth.getUserInfo();
+        console.log("User data:", userData);
+        setUserInfo(userData);
         const tokenResponse = await web3auth.authenticateUser();
         setIdToken(tokenResponse.idToken);
         localStorage.setItem("idToken", tokenResponse.idToken); // Persist the token
@@ -88,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ idToken, login, logout, loggedIn, provider }}
+      value={{ idToken, login, logout, loggedIn, userInfo, provider }}
     >
       {children}
     </AuthContext.Provider>

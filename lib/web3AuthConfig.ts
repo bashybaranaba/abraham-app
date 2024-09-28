@@ -1,3 +1,4 @@
+// lib/web3AuthConfig.ts
 import {
   CHAIN_NAMESPACES,
   IAdapter,
