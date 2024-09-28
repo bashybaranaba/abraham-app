@@ -1,4 +1,8 @@
 import { NextResponse } from "next/server";
+import * as jose from "jose";
+
+// JWKS endpoint for social logins
+const JWKS_URL = "https://api-auth.web3auth.io/jwks";
 
 export const revalidate = 0;
 
@@ -27,11 +31,39 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { story_id, action } = body;
 
+    const token = request.headers.get("Authorization")?.split(" ")[1];
+
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const jwks = jose.createRemoteJWKSet(new URL(JWKS_URL));
+    const { payload } = await jose.jwtVerify(token, jwks, {
+      algorithms: ["ES256"],
+    });
+
+    const wallets = payload.wallets as Array<{
+      type: string;
+      public_key: string;
+    }>;
+    const userPublicKey = wallets?.find(
+      (x) => x.type === "web3auth_app_key"
+    )?.public_key;
+
+    if (!userPublicKey) {
+      return NextResponse.json(
+        { error: "Invalid JWT or public key not found" },
+        { status: 400 }
+      );
+    }
+    console.log("Payload:", payload);
+    console.log("User public key:", userPublicKey);
+
     // Use a fake user ID for now
-    const user = "test_user_1";
+    const user = "test_user_1"; // use an actual identifier like public key or user ID
 
     // Prepare the payload for the /react endpoint
-    const payload = {
+    const actionData = {
       story_id,
       action,
       user,
@@ -46,7 +78,7 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.ABRAHAM_ADMIN_KEY}`,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(actionData),
     });
 
     if (!response.ok) {

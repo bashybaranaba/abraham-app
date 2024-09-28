@@ -6,16 +6,15 @@ import PraiseIcon from "@/components/customIcons/PraiseIcon";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Story({ story }: { story: StoryItem }) {
+  const { idToken, loggedIn, userInfo } = useAuth();
   const [praisesCount, setPraisesCount] = useState(story.praises.length);
   const [burnsCount, setBurnsCount] = useState(story.burns.length);
   const [hasPraised, setHasPraised] = useState(
-    story.praises.includes("test_user_1")
+    story.praises.includes("test_user_1") // Replace with actual user id
   );
   const [hasBurned, setHasBurned] = useState(
-    story.burns.includes("test_user_1")
+    story.burns.includes("test_user_1") // Replace with actual user id
   );
-
-  const { idToken, loggedIn } = useAuth();
 
   const handleReaction = async (actionType: string) => {
     if (!idToken) {
