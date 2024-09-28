@@ -18,12 +18,12 @@ function AccountMenu() {
 
   return (
     <div className="m-3">
-      {loggedIn && userInfo && (
+      {loggedIn && (
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Image
-                src={userInfo.profileImage || ""}
+                src={userInfo?.profileImage || ""}
                 alt={"user image"}
                 width={32}
                 height={32}
@@ -31,7 +31,7 @@ function AccountMenu() {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuLabel>{userInfo.name}</DropdownMenuLabel>
+              <DropdownMenuLabel>{userInfo?.name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {/* Profile Button */}
               <DropdownMenuItem>Profile</DropdownMenuItem>
