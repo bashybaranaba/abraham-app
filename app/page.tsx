@@ -62,6 +62,7 @@ export default function Home() {
   };
 
   const getUserInfo = async () => {
+    console.log("getUserInfo");
     const user = await web3auth.getUserInfo();
     uiConsole(user);
   };
@@ -75,12 +76,20 @@ export default function Home() {
 
   // Check the RPC file for the implementation
   const getAccounts = async () => {
+    console.log("getAccounts");
     if (!provider) {
       uiConsole("provider not initialized yet");
       return;
     }
     const address = await RPC.getAccounts(provider);
     uiConsole(address);
+  };
+
+  const getJWT = async () => {
+    const jwt = await web3auth.authenticateUser();
+    uiConsole(jwt);
+    console.log("jwt:", jwt);
+    //decode jwt
   };
 
   const getBalance = async () => {
@@ -172,6 +181,11 @@ export default function Home() {
           </button>
         </div>
         <div>
+          <button onClick={getJWT} className="card">
+            Get JWT
+          </button>
+        </div>
+        <div>
           <button onClick={logout} className="card">
             Log Out
           </button>
@@ -196,6 +210,9 @@ export default function Home() {
         </div>
         <div className=" flex flex-col items-center justify-center w-full">
           <StoryList stories={stories || []} />
+        </div>
+        <div id="console" className="flex flex-col items-center justify-center">
+          <p>Console</p>
         </div>
       </div>
     </>
