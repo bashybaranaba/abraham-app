@@ -3,6 +3,8 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import { IAdapter, IProvider } from "@web3auth/base";
 import { web3auth, web3AuthOptions } from "@/lib/web3AuthConfig";
 import { getDefaultExternalAdapters } from "@web3auth/default-evm-adapter";
+import RPC from "@/lib/ethersRPC";
+import local from "next/font/local";
 
 // Define the AuthContext type
 interface AuthContextType {
@@ -11,6 +13,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   loggedIn: boolean;
   userInfo: any | null;
+  userAccounts: any | null;
   provider: IProvider | null;
 }
 
@@ -26,14 +29,20 @@ export function useAuth() {
   return context;
 }
 
-// The AuthProvider component to wrap the app
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [idToken, setIdToken] = useState<string | null>(
-    () => localStorage.getItem("idToken") || null
-  );
+  const [idToken, setIdToken] = useState<string | null>(() => null);
   const [loggedIn, setLoggedIn] = useState(!!idToken);
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [userInfo, setUserInfo] = useState<any | null>(null);
+  const [userAccounts, setUserAccounts] = useState<string | null>(null);
+
+  //use effect when idToken changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("idToken");
+      setIdToken(token);
+    }
+  }, [typeof window]);
 
   useEffect(() => {
     // Initialize Web3Auth and check login status
@@ -43,7 +52,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           options: web3AuthOptions,
         });
         adapters.forEach((adapter: IAdapter<unknown>) => {
-          web3auth.configureAdapter(adapter);
+          if (web3auth.getAdapter(adapter.name)) {
+            return;
+          }
+          web3auth.configureAdapter(adapter); // Configure adapter
         });
 
         await web3auth.initModal();
@@ -52,7 +64,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (web3auth.connected && idToken) {
           setLoggedIn(true);
           const userData = await web3auth.getUserInfo();
+
+          if (web3auth.provider) {
+            console.log("Provider is initialized:", web3auth.provider);
+
+            const storedAccounts = await localStorage.getItem("userAccounts");
+
+            if (storedAccounts) {
+              console.log("Stored accounts:", storedAccounts);
+              setUserAccounts(storedAccounts);
+            }
+          } else {
+            console.log("Provider is not initialized");
+          }
+          console.log("User data:", userData);
+          console.log("User accounts:", userAccounts);
           setUserInfo(userData);
+          //setUserAccounts(userAccounts);
         }
       } catch (error) {
         console.error("Error initializing Web3Auth:", error);
@@ -60,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     initWeb3Auth();
-  }, [idToken]);
+  }, [idToken, typeof window]);
 
   const login = async () => {
     try {
@@ -70,11 +98,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (web3auth.connected) {
         setLoggedIn(true);
         const userData = await web3auth.getUserInfo();
+        if (web3auth.provider) {
+          const getUserAccounts = await RPC.getAccounts(web3auth.provider);
+          //set user accounts to local storage
+          localStorage.setItem("userAccounts", getUserAccounts);
+          setUserAccounts(getUserAccounts);
+        }
         console.log("User data:", userData);
+
         setUserInfo(userData);
         const tokenResponse = await web3auth.authenticateUser();
         setIdToken(tokenResponse.idToken);
         localStorage.setItem("idToken", tokenResponse.idToken); // Persist the token
+        //localStorage.setItem("userInfo", JSON.stringify(userData));
+        //localStorage.setItem("userAccounts", userAccounts);
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -88,6 +125,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoggedIn(false);
       setIdToken(null);
       localStorage.removeItem("idToken"); // Clear token on logout
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("userAccounts");
+      setUserAccounts(null);
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -95,7 +135,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ idToken, login, logout, loggedIn, userInfo, provider }}
+      value={{
+        idToken,
+        login,
+        logout,
+        loggedIn,
+        userInfo,
+        userAccounts,
+        provider,
+      }}
     >
       {children}
     </AuthContext.Provider>
