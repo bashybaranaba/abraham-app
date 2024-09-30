@@ -13,13 +13,15 @@ import {
 import Link from "next/link";
 import RandomPixelAvatar from "@/components/account/RandomPixelAvatar";
 import { Button } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
 
 function AccountMenu() {
-  const { login, logout, loggedIn, userInfo, userAccounts } = useAuth();
+  const { login, logout, loggedIn, userInfo, userAccounts, loadingAuth } =
+    useAuth();
 
   return (
     <div className="m-3">
-      {loggedIn && (
+      {!loadingAuth && loggedIn && (
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -59,10 +61,15 @@ function AccountMenu() {
           </DropdownMenu>
         </div>
       )}
-      {!loggedIn && (
+      {!loadingAuth && !loggedIn && (
         <Button onClick={login} className="px-8 rounded-lg">
           Sign in
         </Button>
+      )}
+      {loadingAuth && (
+        <div className="flex justify-center">
+          <Loader2Icon className="w-6 h-6 animate-spin" />
+        </div>
       )}
     </div>
   );
