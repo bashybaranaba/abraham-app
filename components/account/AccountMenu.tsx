@@ -11,27 +11,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import RandomPixelAvatar from "@/components/account/RandomPixelAvatar";
 import { Button } from "@/components/ui/button";
 
 function AccountMenu() {
-  const { login, logout, loggedIn, userInfo } = useAuth();
+  const { login, logout, loggedIn, userInfo, userAccounts } = useAuth();
 
   return (
     <div className="m-3">
-      {loggedIn && userInfo && (
+      {loggedIn && (
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Image
-                src={userInfo?.profileImage || ""}
-                alt={"user image"}
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
+              <div>
+                {userInfo?.profileImage && (
+                  <Image
+                    src={userInfo?.profileImage}
+                    alt={"user image"}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                )}
+                {!userInfo?.profileImage && (
+                  <div className="rounded-full overflow-hidden">
+                    <RandomPixelAvatar
+                      username={userAccounts || "username"}
+                      size={32}
+                    />
+                  </div>
+                )}
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuLabel>{userInfo?.name}</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {userInfo?.name && <p>{userInfo.name}</p>}
+                {!userInfo?.name && userAccounts && <p>{userAccounts}</p>}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               {/* Profile Button */}
               <DropdownMenuItem>Profile</DropdownMenuItem>
