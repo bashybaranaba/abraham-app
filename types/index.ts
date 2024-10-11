@@ -6,4 +6,5 @@ export interface StoryItem {
   praises: string[];
   burns: string[];
   blessings: string[];
+  stills: string[];
 }

@@ -5,6 +5,7 @@ import { FlameIcon } from "lucide-react";
 import PraiseIcon from "@/components/customIcons/PraiseIcon";
 import { useAuth } from "@/context/AuthContext";
 import BlessDialog from "./BlessDialog";
+import Link from "next/link";
 
 export default function Story({ story }: { story: StoryItem }) {
   const { idToken, loggedIn, userInfo } = useAuth();
@@ -88,24 +89,28 @@ export default function Story({ story }: { story: StoryItem }) {
 
   return (
     <div className="grid grid-cols-12 border-b p-4 lg:w-[43vw]">
-      <div className="col-span-1 flex flex-col mr-3">
-        <Image
-          src={"/abrahamlogo.png"}
-          alt={story.logline}
-          width={100}
-          height={100}
-          className="rounded-full aspect-[1] object-cover border"
-        />
-      </div>
+      <Link href={`/story/${story.id}`}>
+        <div className="col-span-1 flex flex-col mr-3">
+          <Image
+            src={"/abrahamlogo.png"}
+            alt={story.logline}
+            width={100}
+            height={100}
+            className="rounded-full aspect-[1] object-cover border"
+          />
+        </div>
+      </Link>
       <div className="col-span-11 flex flex-col ">
-        <p className="mb-1 mr-8">{story.logline}</p>
-        <Image
-          src={story.poster_image}
-          alt={story.logline}
-          width={500}
-          height={500}
-          className="rounded-lg aspect-[1] object-cover mt-2 border"
-        />
+        <Link href={`/story/${story.id}`}>
+          <p className="mb-1 mr-8">{story.logline}</p>
+          <Image
+            src={story.poster_image}
+            alt={story.logline}
+            width={500}
+            height={500}
+            className="rounded-lg aspect-[1] object-cover mt-2 border"
+          />
+        </Link>
         <div className="flex items-center mt-6 mb-4">
           <button
             onClick={handlePraiseClick}
