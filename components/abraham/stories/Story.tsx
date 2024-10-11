@@ -3,22 +3,28 @@ import Image from "next/image";
 import { StoryItem } from "@/types";
 import { FlameIcon } from "lucide-react";
 import PraiseIcon from "@/components/customIcons/PraiseIcon";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Story({ story }: { story: StoryItem }) {
+  const { idToken, loggedIn, userInfo } = useAuth();
   const [praisesCount, setPraisesCount] = useState(story.praises.length);
   const [burnsCount, setBurnsCount] = useState(story.burns.length);
   const [hasPraised, setHasPraised] = useState(
-    story.praises.includes("test_user_1")
+    story.praises.includes("test_user_1") // Replace with actual user id
   );
   const [hasBurned, setHasBurned] = useState(
-    story.burns.includes("test_user_1")
+    story.burns.includes("test_user_1") // Replace with actual user id
   );
 
   const handleReaction = async (actionType: string) => {
+    if (!idToken) {
+      throw new Error("User not authenticated");
+    }
     const response = await fetch("/api/artlabproxy/stories", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
       },
       body: JSON.stringify({
         story_id: story.id,
@@ -98,21 +104,35 @@ export default function Story({ story }: { story: StoryItem }) {
           className="rounded-lg aspect-[1] object-cover mt-2 border"
         />
         <div className="flex items-center mt-6 mb-4">
-          <PraiseIcon
+          <button
             onClick={handlePraiseClick}
-            className={`w-9 h-5 cursor-pointer ${
-              hasPraised ? "text-blue-500" : "text-gray-500"
+            disabled={!loggedIn}
+            className={`cursor-pointer ${
+              loggedIn
+                ? hasPraised
+                  ? "text-blue-500"
+                  : "text-gray-500"
+                : "text-gray-300 cursor-not-allowed"
             }`}
-          />
+          >
+            <PraiseIcon className="w-9 h-5 " />
+          </button>
           <span className="ml-1 text-sm font-semibold text-gray-500">
             {praisesCount}
           </span>
-          <FlameIcon
+          <button
             onClick={handleBurnClick}
-            className={`w-5 h-5 ml-10 cursor-pointer ${
-              hasBurned ? "text-red-500" : "text-gray-500"
+            disabled={!loggedIn}
+            className={`ml-10 cursor-pointer ${
+              loggedIn
+                ? hasBurned
+                  ? "text-red-500"
+                  : "text-gray-500"
+                : "text-gray-300 cursor-not-allowed"
             }`}
-          />
+          >
+            <FlameIcon className="w-5 h-5" />
+          </button>
           <span className="ml-1 text-sm font-semibold text-gray-500">
             {burnsCount}
           </span>

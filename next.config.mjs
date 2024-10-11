@@ -8,6 +8,14 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // Added domain for Google user images
+      },
+      {
+        protocol: "https",
+        hostname: "edenartlab-stage-data.s3.amazonaws.com",
+      },
     ],
   },
 };
