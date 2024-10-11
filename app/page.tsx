@@ -10,6 +10,7 @@ export default function Home() {
   useEffect(() => {
     axios.get("/api/artlabproxy/stories").then((res) => {
       setStories(res.data);
+      console.log("Stories:", res.data);
     });
   }, []);
 

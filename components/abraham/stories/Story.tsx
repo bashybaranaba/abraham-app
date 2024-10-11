@@ -4,11 +4,14 @@ import { StoryItem } from "@/types";
 import { FlameIcon } from "lucide-react";
 import PraiseIcon from "@/components/customIcons/PraiseIcon";
 import { useAuth } from "@/context/AuthContext";
+import BlessDialog from "./BlessDialog";
 
 export default function Story({ story }: { story: StoryItem }) {
   const { idToken, loggedIn, userInfo } = useAuth();
   const [praisesCount, setPraisesCount] = useState(story.praises.length);
   const [burnsCount, setBurnsCount] = useState(story.burns.length);
+  const [blessings, setBlessings] = useState(story.blessings);
+  const [blessingsCount, setBlessingsCount] = useState(story.blessings.length);
   const [hasPraised, setHasPraised] = useState(
     story.praises.includes("test_user_1") // Replace with actual user id
   );
@@ -135,6 +138,16 @@ export default function Story({ story }: { story: StoryItem }) {
           </button>
           <span className="ml-1 text-sm font-semibold text-gray-500">
             {burnsCount}
+          </span>
+          <div className={`ml-10 cursor-pointer text-gray-500`}>
+            <BlessDialog
+              story={story}
+              blessingsCount={blessingsCount}
+              setBlessingsCount={setBlessingsCount}
+            />
+          </div>
+          <span className="ml-1 text-sm font-semibold text-gray-500">
+            {blessingsCount}
           </span>
         </div>
       </div>
