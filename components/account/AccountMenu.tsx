@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import {
@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import RandomPixelAvatar from "@/components/account/RandomPixelAvatar";
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";

@@ -8,10 +8,9 @@ import BlessDialog from "./BlessDialog";
 import Link from "next/link";
 
 export default function Story({ story }: { story: StoryItem }) {
-  const { idToken, loggedIn, userInfo } = useAuth();
+  const { idToken, loggedIn } = useAuth();
   const [praisesCount, setPraisesCount] = useState(story.praises.length);
   const [burnsCount, setBurnsCount] = useState(story.burns.length);
-  const [blessings, setBlessings] = useState(story.blessings);
   const [blessingsCount, setBlessingsCount] = useState(story.blessings.length);
   const [hasPraised, setHasPraised] = useState(
     story.praises.includes("test_user_1") // Replace with actual user id
