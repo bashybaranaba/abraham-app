@@ -5,4 +5,6 @@ export interface StoryItem {
   poster_thumbnail: string;
   praises: string[];
   burns: string[];
+  blessings: string[];
+  stills: string[];
 }

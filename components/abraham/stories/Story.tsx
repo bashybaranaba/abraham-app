@@ -4,11 +4,15 @@ import { StoryItem } from "@/types";
 import { FlameIcon } from "lucide-react";
 import PraiseIcon from "@/components/customIcons/PraiseIcon";
 import { useAuth } from "@/context/AuthContext";
+import BlessDialog from "./BlessDialog";
+import Link from "next/link";
 
 export default function Story({ story }: { story: StoryItem }) {
   const { idToken, loggedIn, userInfo } = useAuth();
   const [praisesCount, setPraisesCount] = useState(story.praises.length);
   const [burnsCount, setBurnsCount] = useState(story.burns.length);
+  const [blessings, setBlessings] = useState(story.blessings);
+  const [blessingsCount, setBlessingsCount] = useState(story.blessings.length);
   const [hasPraised, setHasPraised] = useState(
     story.praises.includes("test_user_1") // Replace with actual user id
   );
@@ -85,24 +89,28 @@ export default function Story({ story }: { story: StoryItem }) {
 
   return (
     <div className="grid grid-cols-12 border-b p-4 lg:w-[43vw]">
-      <div className="col-span-1 flex flex-col mr-3">
-        <Image
-          src={"/abrahamlogo.png"}
-          alt={story.logline}
-          width={100}
-          height={100}
-          className="rounded-full aspect-[1] object-cover border"
-        />
-      </div>
+      <Link href={`/story/${story.id}`}>
+        <div className="col-span-1 flex flex-col mr-3">
+          <Image
+            src={"/abrahamlogo.png"}
+            alt={story.logline}
+            width={100}
+            height={100}
+            className="rounded-full aspect-[1] object-cover border"
+          />
+        </div>
+      </Link>
       <div className="col-span-11 flex flex-col ">
-        <p className="mb-1 mr-8">{story.logline}</p>
-        <Image
-          src={story.poster_image}
-          alt={story.logline}
-          width={500}
-          height={500}
-          className="rounded-lg aspect-[1] object-cover mt-2 border"
-        />
+        <Link href={`/story/${story.id}`}>
+          <p className="mb-1 mr-8">{story.logline}</p>
+          <Image
+            src={story.poster_image}
+            alt={story.logline}
+            width={500}
+            height={500}
+            className="rounded-lg aspect-[1] object-cover mt-2 border"
+          />
+        </Link>
         <div className="flex items-center mt-6 mb-4">
           <button
             onClick={handlePraiseClick}
@@ -135,6 +143,16 @@ export default function Story({ story }: { story: StoryItem }) {
           </button>
           <span className="ml-1 text-sm font-semibold text-gray-500">
             {burnsCount}
+          </span>
+          <div className={`ml-10 cursor-pointer text-gray-500`}>
+            <BlessDialog
+              story={story}
+              blessingsCount={blessingsCount}
+              setBlessingsCount={setBlessingsCount}
+            />
+          </div>
+          <span className="ml-1 text-sm font-semibold text-gray-500">
+            {blessingsCount}
           </span>
         </div>
       </div>
