@@ -4,8 +4,6 @@ import { IAdapter, IProvider } from "@web3auth/base";
 import { web3auth, web3AuthOptions } from "@/lib/web3AuthConfig";
 import { getDefaultExternalAdapters } from "@web3auth/default-evm-adapter";
 import RPC from "@/lib/ethersRPC";
-import local from "next/font/local";
-import { set } from "react-hook-form";
 
 // Define the AuthContext type
 interface AuthContextType {
